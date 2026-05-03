@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- None — authentication implementation complete
+- None — project dialogs implementation complete
 
 ## Completed
 
@@ -30,6 +30,13 @@ change.
 - Root page redirects authenticated users to /editor, unauthenticated to /sign-in
 - Added UserButton to editor navbar right section with dark theme styling
 - Created basic editor page with navbar and sidebar integration
+- Editor home screen with heading, description, and New Project button
+- Create Project dialog with live slug preview (updates as user types)
+- Rename Project dialog with prefilled input, auto-focus, Enter to submit
+- Delete Project dialog with destructive confirmation styling
+- Project sidebar with mock project list (My Projects / Shared tabs)
+- Project item actions menu (rename, delete) - only shown for owned projects
+- useProjectDialogs hook for managing dialog/form/loading state
 
 ## In Progress
 

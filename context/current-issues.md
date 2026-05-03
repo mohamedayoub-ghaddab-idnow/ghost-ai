@@ -1,0 +1,2 @@
+- the current create project functionality does not add a new project to the mock table, and does not edit or delete from the moch table in the hook, can we fix it to have these functionalites even though its still a mock data
+- right now the projet can can accept only special character as a project name though creating an empty slug, can we add validation for no empty slug in the create projet dialog ?

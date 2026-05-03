@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- None — editor chrome implementation complete
+- None — authentication implementation complete
 
 ## Completed
 
@@ -22,6 +22,14 @@ change.
 - Editor navbar component with sidebar toggle (PanelLeftOpen/PanelLeftClose icons)
 - Project sidebar component with sliding animation, backdrop, tabs (My Projects/Shared), empty states, and New Project button
 - Created components/editor directory for editor-specific components
+- Installed @clerk/ui package
+- Wrapped root layout with ClerkProvider using Clerk's dark theme
+- Created proxy.ts at project root for route protection with object-based matcher config
+- Created sign-in page with two-panel layout (feature list left, Clerk form right)
+- Created sign-up page with two-panel layout matching sign-in
+- Root page redirects authenticated users to /editor, unauthenticated to /sign-in
+- Added UserButton to editor navbar right section with dark theme styling
+- Created basic editor page with navbar and sidebar integration
 
 ## In Progress
 
@@ -29,7 +37,9 @@ change.
 
 ## Next Up
 
-- Authentication and project management features
+- Canvas implementation with React Flow
+- Project management features
+- Liveblocks integration for real-time collaboration
 
 ## Open Questions
 
@@ -44,6 +54,10 @@ change.
 - Editor chrome: fixed-height navbar (h-14), floating sidebar overlay (w-72) that slides in from left
 - Sidebar uses backdrop blur and rounded-r-2xl for polished dark theme appearance
 - Empty states use 8x8 icon containers with rounded-2xl
+- Auth pages: two-panel layout on large screens, form-only on small screens, no gradients or oversized heroes
+- Route protection via proxy.ts with object-based matcher config (Next.js 16 compatible)
+- Clerk components styled with CSS variable tokens, no hardcoded colors
+- Proxy uses named export `proxy` per Next.js 16 convention (clerkMiddleware assigned to variable)
 
 ## Session Notes
 
@@ -51,3 +65,8 @@ change.
 - The @theme inline directive in globals.css maps CSS variables to Tailwind utility names
 - All shadcn components were created manually to ensure dark theme styling matches the design system
 - Dialog component already ready for future use with title, description, and footer actions support
+- Clerk already installed and connected via @clerk/nextjs package
+- Environment variables for Clerk keys already present in .env.local
+- Next.js 16 proxy expects named export `proxy` or default export, not `middleware`
+- Next.js 16 proxy config with string-based regex matchers causes "Invalid segment configuration" error
+- Object-based matcher config (with `source` property) works correctly in Next.js 16 proxy

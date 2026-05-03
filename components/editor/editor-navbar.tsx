@@ -1,6 +1,7 @@
 "use client";
 
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 interface EditorNavbarProps {
@@ -35,7 +36,20 @@ export function EditorNavbar({
         <div className="flex items-center" />
 
         {/* Right section */}
-        <div className="flex items-center" />
+        <div className="flex items-center">
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "h-8 w-8",
+                userButtonTrigger: "focus:shadow-none",
+                userButtonPopoverCard: "bg-bg-elevated border border-border-default rounded-2xl",
+                userButtonPopoverActionButton: "text-text-primary hover:bg-bg-subtle rounded-xl",
+                userButtonPopoverActionButtonText: "text-text-primary",
+                userButtonPopoverFooter: "hidden",
+              },
+            }}
+          />
+        </div>
       </div>
     </nav>
   );

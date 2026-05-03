@@ -33,8 +33,22 @@ interface UseProjectDialogsReturn {
   handleSubmit: () => Promise<void>;
 }
 
-// Mock project data
-const MOCK_PROJECTS: Project[] = [
+function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replaceAll(/[^a-z0-9\s-]/g, "")
+    .replaceAll(/\s+/g, "-")
+    .replaceAll(/-+/g, "-")
+    .replaceAll(/^-|-$/g, "");
+}
+
+function generateId(): string {
+  return `project-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+// Initial mock project data
+const INITIAL_MOCK_PROJECTS: Project[] = [
   {
     id: "1",
     name: "E-commerce Platform",
@@ -55,16 +69,6 @@ const MOCK_PROJECTS: Project[] = [
   },
 ];
 
-function generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .replaceAll(/[^a-z0-9\s-]/g, "")
-    .replaceAll(/\s+/g, "-")
-    .replaceAll(/-+/g, "-")
-    .replaceAll(/^-|-$/g, "");
-}
-
 export function useProjectDialogs(): UseProjectDialogsReturn {
   const [dialogState, setDialogState] = useState<DialogState>({
     type: null,
@@ -72,21 +76,18 @@ export function useProjectDialogs(): UseProjectDialogsReturn {
   });
   const [formData, setFormData] = useState<FormData>({ name: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [mockProjects] = useState<Project[]>(MOCK_PROJECTS);
+  const [mockProjects, setMockProjects] = useState<Project[]>(INITIAL_MOCK_PROJECTS);
 
   const openCreateDialog = useCallback(() => {
     setFormData({ name: "" });
     setDialogState({ type: "create", projectId: null });
   }, []);
 
-  const openRenameDialog = useCallback(
-    (projectId: string) => {
-      const project = mockProjects.find((p) => p.id === projectId);
-      setFormData({ name: project?.name ?? "" });
-      setDialogState({ type: "rename", projectId });
-    },
-    [mockProjects],
-  );
+  const openRenameDialog = useCallback((projectId: string) => {
+    const project = mockProjects.find((p) => p.id === projectId);
+    setFormData({ name: project?.name ?? "" });
+    setDialogState({ type: "rename", projectId });
+  }, [mockProjects]);
 
   const openDeleteDialog = useCallback((projectId: string) => {
     setDialogState({ type: "delete", projectId });
@@ -100,10 +101,37 @@ export function useProjectDialogs(): UseProjectDialogsReturn {
   const handleSubmit = useCallback(async () => {
     setIsLoading(true);
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    if (dialogState.type === "create") {
+      const slug = generateSlug(formData.name);
+      if (slug) {
+        const newProject: Project = {
+          id: generateId(),
+          name: formData.name.trim(),
+          slug,
+          isOwner: true,
+        };
+        setMockProjects((prev) => [newProject, ...prev]);
+      }
+    } else if (dialogState.type === "rename" && dialogState.projectId) {
+      const slug = generateSlug(formData.name);
+      if (slug) {
+        setMockProjects((prev) =>
+          prev.map((p) =>
+            p.id === dialogState.projectId
+              ? { ...p, name: formData.name.trim(), slug }
+              : p
+          )
+        );
+      }
+    } else if (dialogState.type === "delete" && dialogState.projectId) {
+      setMockProjects((prev) => prev.filter((p) => p.id !== dialogState.projectId));
+    }
+
     setIsLoading(false);
     closeDialog();
-  }, [closeDialog]);
+  }, [dialogState, formData, closeDialog]);
 
   return {
     dialogState,
@@ -121,4 +149,8 @@ export function useProjectDialogs(): UseProjectDialogsReturn {
 
 export function useSlugPreview(name: string): string {
   return generateSlug(name);
+}
+
+export function isValidSlug(name: string): boolean {
+  return generateSlug(name).length > 0;
 }

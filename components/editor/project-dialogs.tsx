@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSlugPreview, type Project } from "@/hooks/use-project-dialogs";
+import { useSlugPreview, isValidSlug, type Project } from "@/hooks/use-project-dialogs";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -32,6 +32,8 @@ export function CreateProjectDialog({
   isLoading,
 }: Readonly<CreateProjectDialogProps>) {
   const slugPreview = useSlugPreview(projectName);
+  const hasValidSlug = isValidSlug(projectName);
+  const showSlugError = projectName.trim().length > 0 && !hasValidSlug;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -42,7 +44,9 @@ export function CreateProjectDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    if (hasValidSlug) {
+      onSubmit();
+    }
   };
 
   return (
@@ -68,7 +72,11 @@ export function CreateProjectDialog({
                 onChange={(e) => onProjectNameChange(e.target.value)}
               />
             </div>
-            {projectName && (
+            {showSlugError ? (
+              <p className="text-sm text-state-error">
+                Project name must contain at least one letter or number
+              </p>
+            ) : projectName && (
               <div className="space-y-1">
                 <span className="text-xs text-text-muted">Slug preview</span>
                 <p className="text-sm text-text-secondary font-mono">{slugPreview}</p>
@@ -84,7 +92,7 @@ export function CreateProjectDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={!projectName.trim() || isLoading}>
+            <Button type="submit" disabled={!hasValidSlug || isLoading}>
               {isLoading ? (
                 "Creating..."
               ) : (
@@ -120,6 +128,8 @@ export function RenameProjectDialog({
   onSubmit,
   isLoading,
 }: Readonly<RenameProjectDialogProps>) {
+  const hasValidSlug = isValidSlug(projectName);
+  const showSlugError = projectName.trim().length > 0 && !hasValidSlug;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -130,13 +140,17 @@ export function RenameProjectDialog({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    if (hasValidSlug) {
+      onSubmit();
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onSubmit();
+      if (hasValidSlug) {
+        onSubmit();
+      }
     }
   };
 
@@ -163,6 +177,11 @@ export function RenameProjectDialog({
                 onKeyDown={handleKeyDown}
               />
             </div>
+            {showSlugError && (
+              <p className="text-sm text-state-error">
+                Project name must contain at least one letter or number
+              </p>
+            )}
           </div>
           <DialogFooter>
             <Button
@@ -173,7 +192,7 @@ export function RenameProjectDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={!projectName.trim() || isLoading}>
+            <Button type="submit" disabled={!hasValidSlug || isLoading}>
               {isLoading ? (
                 "Renaming..."
               ) : (

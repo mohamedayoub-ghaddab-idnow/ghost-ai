@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import type { Project } from "@/hooks/use-project-dialogs";
+import type { ProjectData } from "@/lib/data/projects";
 
 interface ProjectSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  projects: Project[];
+  ownedProjects: ProjectData[];
+  sharedProjects: ProjectData[];
   onCreateProject: () => void;
   onRenameProject: (projectId: string) => void;
   onDeleteProject: (projectId: string) => void;
@@ -20,13 +21,12 @@ interface ProjectSidebarProps {
 export function ProjectSidebar({
   isOpen,
   onClose,
-  projects,
+  ownedProjects,
+  sharedProjects,
   onCreateProject,
   onRenameProject,
   onDeleteProject,
 }: Readonly<ProjectSidebarProps>) {
-  const myProjects = projects.filter((p) => p.isOwner);
-  const sharedProjects = projects.filter((p) => !p.isOwner);
 
   return (
     <>
@@ -73,7 +73,7 @@ export function ProjectSidebar({
 
             <ScrollArea className="flex-1 mt-4">
               <TabsContent value="my-projects" className="m-0 p-4">
-                {myProjects.length === 0 ? (
+                {ownedProjects.length === 0 ? (
                   <EmptyState
                     icon={FolderOpen}
                     title="No projects yet"
@@ -81,7 +81,7 @@ export function ProjectSidebar({
                   />
                 ) : (
                   <div className="space-y-2">
-                    {myProjects.map((project) => (
+                    {ownedProjects.map((project) => (
                       <ProjectItem
                         key={project.id}
                         project={project}
@@ -149,7 +149,7 @@ function EmptyState({ icon: Icon, title, description }: Readonly<EmptyStateProps
 }
 
 interface ProjectItemProps {
-  project: Project;
+  project: ProjectData;
   showActions?: boolean;
   onRename: (projectId: string) => void;
   onDelete: (projectId: string) => void;

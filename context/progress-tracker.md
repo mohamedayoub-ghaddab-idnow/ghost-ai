@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- None — Editor home wired to real project API
+- None — Editor workspace shell implemented
 
 ## Completed
 
@@ -61,6 +61,18 @@ change.
 - Updated ProjectSidebar to accept ownedProjects and sharedProjects as separate props
 - Updated project dialogs to use ProjectData type
 - Build passes with no TypeScript errors
+- Created components/editor/access-denied.tsx with centered layout, lock icon, message, and link back to /editor
+- Created lib/project-access.ts with getCurrentUser and checkProjectAccess helpers
+- Created components/editor/workspace-layout.tsx with full-viewport layout
+- Workspace layout: top navbar with project name, share button, AI sidebar toggle
+- Workspace layout: existing ProjectSidebar on left, canvas placeholder center, AI sidebar right
+- Created components/editor/workspace-client.tsx wrapping workspace layout with dialogs
+- Created /editor/[roomId] page as server component with access checks
+- /editor/[roomId] redirects unauthenticated to /sign-in, shows AccessDenied for unauthorized projects
+- Project sidebar navigates to /editor/[projectId] on project click
+- Active project highlighted in sidebar with accent background and border
+- Deleting a project navigates to /editor instead of just refreshing
+- Build passes with no TypeScript errors
 
 ## In Progress
 
@@ -69,8 +81,8 @@ change.
 ## Next Up
 
 - Canvas implementation with React Flow
-- Project management features
 - Liveblocks integration for real-time collaboration
+- AI chat sidebar implementation
 
 ## Open Questions
 
@@ -92,6 +104,11 @@ change.
 - Project IDs serve as Liveblocks room IDs (no separate room ID field)
 - Slugs are generated with base name + random 6-char suffix for uniqueness
 - Editor page is a server component that fetches data server-side; interactive parts are client components
+- /editor/[roomId] is a server component that validates access before rendering
+- Access helpers (getCurrentUser, checkProjectAccess) live in lib/project-access.ts
+- Workspace navbar shows project name, share button, AI toggle, and user button
+- AI sidebar is a slide-over panel on the right (placeholder for future chat)
+- Canvas area uses dark background with centered placeholder message
 
 ## Session Notes
 

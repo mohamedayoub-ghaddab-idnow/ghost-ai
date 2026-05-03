@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- None — Prisma integration complete
+- None — Editor home wired to real project API
 
 ## Completed
 
@@ -43,6 +43,24 @@ change.
 - Created lib/prisma.ts with cached PrismaClient singleton using @prisma/adapter-pg
 - Ran initial migration (20260503140306_init) successfully
 - Build passes with no TypeScript errors
+- Created GET /api/projects route to list current user's projects
+- Created POST /api/projects route to create projects (defaults name to "Untitled Project")
+- Created PATCH /api/projects/[projectId] route to rename projects (owner-only)
+- Created DELETE /api/projects/[projectId] route to delete projects (owner-only)
+- Implemented auth checks: 401 for unauthenticated, 403 for non-owner mutations
+- Build passes with no TypeScript errors
+- Added slug field to Project model with unique constraint
+- Created migration to add slug field (20260503_add_project_slug)
+- Updated GET /api/projects to return owned and shared projects separately
+- Updated POST /api/projects to generate unique slug with random suffix
+- Updated PATCH /api/projects/[projectId] to update slug on rename
+- Created lib/data/projects.ts with server-side data helpers (getUserProjects, getOwnedProjects, getSharedProjects)
+- Created hooks/use-project-actions.ts with real API calls for create/rename/delete
+- Converted editor page to server component that fetches projects server-side
+- Created components/editor/editor-home.tsx as client component for interactive UI
+- Updated ProjectSidebar to accept ownedProjects and sharedProjects as separate props
+- Updated project dialogs to use ProjectData type
+- Build passes with no TypeScript errors
 
 ## In Progress
 
@@ -71,6 +89,9 @@ change.
 - Route protection via proxy.ts with object-based matcher config (Next.js 16 compatible)
 - Clerk components styled with CSS variable tokens, no hardcoded colors
 - Proxy uses named export `proxy` per Next.js 16 convention (clerkMiddleware assigned to variable)
+- Project IDs serve as Liveblocks room IDs (no separate room ID field)
+- Slugs are generated with base name + random 6-char suffix for uniqueness
+- Editor page is a server component that fetches data server-side; interactive parts are client components
 
 ## Session Notes
 

@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import {
   useSlugPreview,
   isValidSlug,
-  type Project,
-} from "@/hooks/use-project-dialogs";
+} from "@/hooks/use-project-actions";
+import type { ProjectData } from "@/lib/data/projects";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -123,7 +123,7 @@ export function CreateProjectDialog({
 interface RenameProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  project: Project | undefined;
+  project: ProjectData | undefined;
   projectName: string;
   onProjectNameChange: (name: string) => void;
   onSubmit: () => Promise<void>;
@@ -229,7 +229,7 @@ export function RenameProjectDialog({
 interface DeleteProjectDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  project: Project | undefined;
+  project: ProjectData | undefined;
   onSubmit: () => Promise<void>;
   isLoading: boolean;
 }

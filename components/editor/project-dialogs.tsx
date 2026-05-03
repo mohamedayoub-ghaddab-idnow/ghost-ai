@@ -12,7 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSlugPreview, isValidSlug, type Project } from "@/hooks/use-project-dialogs";
+import {
+  useSlugPreview,
+  isValidSlug,
+  type Project,
+} from "@/hooks/use-project-dialogs";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -42,10 +46,10 @@ export function CreateProjectDialog({
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hasValidSlug) {
-      onSubmit();
+    if (hasValidSlug && !isLoading) {
+      await onSubmit();
     }
   };
 
@@ -61,7 +65,10 @@ export function CreateProjectDialog({
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label htmlFor="project-name" className="text-sm font-medium text-text-primary">
+              <label
+                htmlFor="project-name"
+                className="text-sm font-medium text-text-primary"
+              >
                 Project name
               </label>
               <Input
@@ -76,11 +83,15 @@ export function CreateProjectDialog({
               <p className="text-sm text-state-error">
                 Project name must contain at least one letter or number
               </p>
-            ) : projectName && (
-              <div className="space-y-1">
-                <span className="text-xs text-text-muted">Slug preview</span>
-                <p className="text-sm text-text-secondary font-mono">{slugPreview}</p>
-              </div>
+            ) : (
+              projectName && (
+                <div className="space-y-1">
+                  <span className="text-xs text-text-muted">Slug preview</span>
+                  <p className="text-sm text-text-secondary font-mono">
+                    {slugPreview}
+                  </p>
+                </div>
+              )
             )}
           </div>
           <DialogFooter>
@@ -138,18 +149,18 @@ export function RenameProjectDialog({
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (hasValidSlug) {
-      onSubmit();
+    if (hasValidSlug && !isLoading) {
+      await onSubmit();
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = async (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (hasValidSlug) {
-        onSubmit();
+      if (hasValidSlug && !isLoading) {
+        await onSubmit();
       }
     }
   };
@@ -160,13 +171,19 @@ export function RenameProjectDialog({
         <DialogHeader>
           <DialogTitle>Rename Project</DialogTitle>
           <DialogDescription>
-            Current name: <span className="font-medium text-text-primary">{project?.name}</span>
+            Current name:{" "}
+            <span className="font-medium text-text-primary">
+              {project?.name}
+            </span>
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label htmlFor="rename-project" className="text-sm font-medium text-text-primary">
+              <label
+                htmlFor="rename-project"
+                className="text-sm font-medium text-text-primary"
+              >
                 New name
               </label>
               <Input
@@ -224,9 +241,11 @@ export function DeleteProjectDialog({
   onSubmit,
   isLoading,
 }: Readonly<DeleteProjectDialogProps>) {
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    if (!isLoading) {
+      await onSubmit();
+    }
   };
 
   return (
@@ -236,8 +255,10 @@ export function DeleteProjectDialog({
           <DialogTitle>Delete Project</DialogTitle>
           <DialogDescription>
             Are you sure you want to delete{" "}
-            <span className="font-medium text-text-primary">{project?.name}</span>? This action
-            cannot be undone.
+            <span className="font-medium text-text-primary">
+              {project?.name}
+            </span>
+            ? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

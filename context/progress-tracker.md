@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- None — project dialogs implementation complete
+- None — Prisma integration complete
 
 ## Completed
 
@@ -37,6 +37,12 @@ change.
 - Project sidebar with mock project list (My Projects / Shared tabs)
 - Project item actions menu (rename, delete) - only shown for owned projects
 - useProjectDialogs hook for managing dialog/form/loading state
+- Created prisma/models/project.prisma with Project and ProjectCollaborator models
+- Project model: ownerId, name, description, status enum (DRAFT/ARCHIVED), canvasJsonPath, timestamps, indexes on ownerId and createdAt
+- ProjectCollaborator model: project relation with cascade delete, collaboratorEmail, unique constraint on project/email, indexes
+- Created lib/prisma.ts with cached PrismaClient singleton using @prisma/adapter-pg
+- Ran initial migration (20260503140306_init) successfully
+- Build passes with no TypeScript errors
 
 ## In Progress
 
@@ -77,3 +83,5 @@ change.
 - Next.js 16 proxy expects named export `proxy` or default export, not `middleware`
 - Next.js 16 proxy config with string-based regex matchers causes "Invalid segment configuration" error
 - Object-based matcher config (with `source` property) works correctly in Next.js 16 proxy
+- Prisma v7 requires driver adapter (cannot instantiate PrismaClient without one)
+- Prisma client generated to app/generated/prisma with schema path in prisma/models/

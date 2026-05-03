@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server"
 import { prisma } from "@/lib/prisma"
 
 export interface ProjectData {
@@ -29,9 +30,9 @@ export async function getOwnedProjects(userId: string): Promise<ProjectData[]> {
   return projects.map((p) => ({ ...p, isOwner: true }))
 }
 
-export async function getSharedProjects(userId: string): Promise<ProjectData[]> {
+export async function getSharedProjects(userEmail: string): Promise<ProjectData[]> {
   const collaborations = await prisma.projectCollaborator.findMany({
-    where: { collaboratorEmail: userId },
+    where: { collaboratorEmail: userEmail },
     include: {
       project: {
         select: {
@@ -61,9 +62,16 @@ export async function getUserProjects(userId: string): Promise<{
   owned: ProjectData[]
   shared: ProjectData[]
 }> {
+  // Get user email from Clerk
+  const client = await clerkClient()
+  const user = await client.users.getUser(userId)
+  const email = user.emailAddresses.find(
+    (e) => e.id === user.primaryEmailAddressId
+  )?.emailAddress
+
   const [owned, shared] = await Promise.all([
     getOwnedProjects(userId),
-    getSharedProjects(userId),
+    getSharedProjects(email ?? ""),
   ])
 
   return { owned, shared }

@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- None — Editor workspace shell implemented
+- None — Share dialog implemented
 
 ## Completed
 
@@ -73,6 +73,19 @@ change.
 - Active project highlighted in sidebar with accent background and border
 - Deleting a project navigates to /editor instead of just refreshing
 - Build passes with no TypeScript errors
+- Created share dialog component with owner/collaborator views
+- Share dialog opens from workspace navbar Share button
+- Owners can invite collaborators by email
+- Owners can remove collaborators from the list
+- Collaborators see read-only view (no invite/remove buttons)
+- Project link copy with "Copied!" feedback
+- Collaborator names and avatars enriched from Clerk Backend API
+- Fallback to email-only display when Clerk user not found
+- Created GET /api/projects/[projectId]/collaborators route
+- Created POST /api/projects/[projectId]/collaborators route (owner-only)
+- Created DELETE /api/projects/[projectId]/collaborators/[collaboratorId] route (owner-only)
+- Server-side ownership enforcement for invite/remove actions
+- Build passes with no TypeScript errors
 
 ## In Progress
 
@@ -109,6 +122,11 @@ change.
 - Workspace navbar shows project name, share button, AI toggle, and user button
 - AI sidebar is a slide-over panel on the right (placeholder for future chat)
 - Canvas area uses dark background with centered placeholder message
+- Share dialog: owners can invite/remove collaborators; collaborators see read-only view
+- Collaborators stored by email in ProjectCollaborator table
+- Clerk Backend API enriches collaborator emails with display name and avatar
+- No local user table — all user data comes from Clerk API
+- Owner is included in collaborators list with isOwner flag
 
 ## Session Notes
 

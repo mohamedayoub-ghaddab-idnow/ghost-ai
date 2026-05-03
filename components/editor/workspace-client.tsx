@@ -7,6 +7,7 @@ import {
   RenameProjectDialog,
   DeleteProjectDialog,
 } from "@/components/editor/project-dialogs";
+import { ShareDialog } from "@/components/editor/share-dialog";
 import { useProjectActions } from "@/hooks/use-project-actions";
 import type { ProjectData } from "@/lib/data/projects";
 
@@ -33,6 +34,8 @@ export function WorkspaceClient({
     handleSubmit,
   } = useProjectActions({ ownedProjects, sharedProjects });
 
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+
   const allProjects = [...ownedProjects, ...sharedProjects];
   const currentProject = allProjects.find((p) => p.id === dialogState.projectId);
 
@@ -45,6 +48,7 @@ export function WorkspaceClient({
         onCreateProject={openCreateDialog}
         onRenameProject={openRenameDialog}
         onDeleteProject={openDeleteDialog}
+        onOpenShareDialog={() => setIsShareDialogOpen(true)}
       />
 
       {/* Dialogs */}
@@ -73,6 +77,14 @@ export function WorkspaceClient({
         project={currentProject}
         onSubmit={handleSubmit}
         isLoading={isLoading}
+      />
+
+      <ShareDialog
+        open={isShareDialogOpen}
+        onOpenChange={setIsShareDialogOpen}
+        projectId={project.id}
+        projectName={project.name}
+        isOwner={project.isOwner}
       />
     </>
   );

@@ -15,6 +15,7 @@ interface WorkspaceLayoutProps {
   onCreateProject: () => void;
   onRenameProject: (projectId: string) => void;
   onDeleteProject: (projectId: string) => void;
+  onOpenShareDialog: () => void;
 }
 
 export function WorkspaceLayout({
@@ -24,6 +25,7 @@ export function WorkspaceLayout({
   onCreateProject,
   onRenameProject,
   onDeleteProject,
+  onOpenShareDialog,
 }: Readonly<WorkspaceLayoutProps>) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(false);
@@ -53,7 +55,7 @@ export function WorkspaceLayout({
 
         {/* Right: Actions + User */}
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={onOpenShareDialog}>
             <Share2 className="h-4 w-4 mr-2" />
             Share
           </Button>

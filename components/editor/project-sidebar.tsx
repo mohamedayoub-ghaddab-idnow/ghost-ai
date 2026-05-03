@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { X, Plus, FolderOpen, Users, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +14,7 @@ interface ProjectSidebarProps {
   onClose: () => void;
   ownedProjects: ProjectData[];
   sharedProjects: ProjectData[];
+  activeProjectId?: string | null;
   onCreateProject: () => void;
   onRenameProject: (projectId: string) => void;
   onDeleteProject: (projectId: string) => void;
@@ -23,6 +25,7 @@ export function ProjectSidebar({
   onClose,
   ownedProjects,
   sharedProjects,
+  activeProjectId,
   onCreateProject,
   onRenameProject,
   onDeleteProject,
@@ -85,6 +88,8 @@ export function ProjectSidebar({
                       <ProjectItem
                         key={project.id}
                         project={project}
+                        isActive={project.id === activeProjectId}
+                        onNavigate={onClose}
                         onRename={onRenameProject}
                         onDelete={onDeleteProject}
                       />
@@ -106,7 +111,9 @@ export function ProjectSidebar({
                       <ProjectItem
                         key={project.id}
                         project={project}
+                        isActive={project.id === activeProjectId}
                         showActions={false}
+                        onNavigate={onClose}
                         onRename={onRenameProject}
                         onDelete={onDeleteProject}
                       />
@@ -150,23 +157,41 @@ function EmptyState({ icon: Icon, title, description }: Readonly<EmptyStateProps
 
 interface ProjectItemProps {
   project: ProjectData;
+  isActive?: boolean;
   showActions?: boolean;
+  onNavigate: () => void;
   onRename: (projectId: string) => void;
   onDelete: (projectId: string) => void;
 }
 
 function ProjectItem({
   project,
+  isActive = false,
   showActions = true,
+  onNavigate,
   onRename,
   onDelete,
 }: Readonly<ProjectItemProps>) {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <div className="group relative flex items-center justify-between rounded-xl px-3 py-2 hover:bg-bg-elevated transition-colors cursor-pointer">
+    <Link
+      href={`/editor/${project.id}`}
+      onClick={onNavigate}
+      className={cn(
+        "group relative flex items-center justify-between rounded-xl px-3 py-2 transition-colors cursor-pointer",
+        isActive
+          ? "bg-accent-primary-dim border border-accent-primary/30"
+          : "hover:bg-bg-elevated border border-transparent"
+      )}
+    >
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-text-primary truncate">{project.name}</p>
+        <p className={cn(
+          "text-sm font-medium truncate",
+          isActive ? "text-accent-primary" : "text-text-primary"
+        )}>
+          {project.name}
+        </p>
         <p className="text-xs text-text-muted truncate">{project.slug}</p>
       </div>
       {showActions && (
@@ -176,6 +201,7 @@ function ProjectItem({
             size="icon"
             className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
@@ -194,7 +220,9 @@ function ProjectItem({
                 <button
                   type="button"
                   className="flex items-center w-full px-3 py-2 text-sm text-text-primary hover:bg-bg-elevated transition-colors"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setShowMenu(false);
                     onRename(project.id);
                   }}
@@ -205,7 +233,9 @@ function ProjectItem({
                 <button
                   type="button"
                   className="flex items-center w-full px-3 py-2 text-sm text-state-error hover:bg-bg-elevated transition-colors"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     setShowMenu(false);
                     onDelete(project.id);
                   }}
@@ -218,6 +248,6 @@ function ProjectItem({
           )}
         </div>
       )}
-    </div>
+    </Link>
   );
 }

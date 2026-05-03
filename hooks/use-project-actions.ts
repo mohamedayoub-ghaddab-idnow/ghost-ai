@@ -126,7 +126,8 @@ export function useProjectActions({
         }
 
         closeDialog();
-        router.refresh();
+        // Navigate to editor home after delete
+        router.push("/editor");
       }
     } catch (error) {
       console.error("Project action error:", error);
